@@ -1,5 +1,7 @@
 package ru.nsu.fit.sandbags;
 
+import android.graphics.Color;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,7 +9,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
+
+import com.davemorrissey.labs.subscaleview.ImageSource;
 
 public class FloorFragment1 extends Fragment {
 
@@ -22,5 +25,10 @@ public class FloorFragment1 extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        PinView mapView = view.findViewById(R.id.mapView);
+        mapView.setImage(ImageSource.asset("map.png"));
+        mapView.setPin(new PointF(400f,700f));
+        mapView.setPin(new PointF(800f,700f));
     }
+
 }

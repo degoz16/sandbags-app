@@ -41,13 +41,10 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < 5; i++) {
             final int finalI = i;
-            floors[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.frameLayout, floorFragments[finalI]);
-                    fragmentTransaction.commit();
-                }
+            floors[i].setOnClickListener(view -> {
+                fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frameLayout, floorFragments[finalI]);
+                fragmentTransaction.commit();
             });
         }
     }

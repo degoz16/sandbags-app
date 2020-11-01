@@ -46,7 +46,6 @@ public class FloorFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         map = view.findViewById(R.id.mapView);
         map.setImage(ImageSource.asset("map.png"));
-        test = view.findViewById(R.id.test);
         if (updateManager == null) {
             updateManager = MainActivity.getUpdateManager();
         }

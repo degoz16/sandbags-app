@@ -15,9 +15,14 @@ import ru.nsu.fit.sandbags.fragments.FloorFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FragmentTransaction fragmentTransaction;
     private final List<Button> floors = new ArrayList<>(5);
     private FloorFragment floorFragment;
+    private static final UpdateManager updateManager = new UpdateManager();
+
+    public static UpdateManager getUpdateManager() {
+        return updateManager;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +36,11 @@ public class MainActivity extends AppCompatActivity {
         floors.add(4, findViewById(R.id.floor_5));
 
         floorFragment = new FloorFragment();
-        floorFragment.setUpdateManager(new UpdateManager());
 
         for (int i = 0; i < 5; i++) {
             final int finalI = i;
             floors.get(i).setOnClickListener(view -> {
-
+                floorFragment.updatePinsOnMap(updateManager.getNumbersOfSeats(finalI));
             });
         }
     }

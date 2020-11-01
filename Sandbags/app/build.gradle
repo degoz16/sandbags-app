@@ -4,6 +4,10 @@ android {
     compileSdkVersion 29
     buildToolsVersion "30.0.2"
 
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
     defaultConfig {
         applicationId "ru.nsu.fit.sandbags"
         minSdkVersion 16
@@ -36,6 +40,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.1.0'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
     testImplementation 'junit:junit:4.12'
+    testImplementation 'org.json:json:20200518'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }

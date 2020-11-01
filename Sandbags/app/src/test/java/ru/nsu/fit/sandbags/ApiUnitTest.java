@@ -11,6 +11,7 @@ public class ApiUnitTest {
     public void serverGetStateTest() {
         ServerAPI serverAPI = new ServerAPI();
         List<List<Integer>> state = serverAPI.getCurrentSandbagsState();
+        System.out.println(state.size());
         for (List<Integer> place : state) {
             for (Integer emptyBags : place) {
                 System.out.println(emptyBags);

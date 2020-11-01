@@ -15,18 +15,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/test"
-        android:layout_width="88dp"
-        android:layout_height="60dp"
-        android:layout_weight="1"
-        android:text="@string/button_floor_1"
-        app:layout_constraintBottom_toBottomOf="@+id/mapView"
-        app:layout_constraintEnd_toEndOf="@+id/mapView"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="@+id/mapView"
-        app:layout_constraintTop_toTopOf="@+id/mapView"
-        app:layout_constraintVertical_bias="0.147" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
 

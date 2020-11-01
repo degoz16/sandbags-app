@@ -12,15 +12,16 @@ public class UpdateManager {
     private final List<List<PinStruct>> numbersOfSeats = new ArrayList<>();
 
     public UpdateManager() {
+        List<PinStruct> floorSeats = new ArrayList<>();
+        floorSeats.add(0, new PinStruct(10, new PointF(320f, 1800f)));
         for (int i = 0; i < 5; i++) {
-            //Временный код, потом каждый этаж будет настроен по-разному
-            List<PinStruct> floorSeats = new ArrayList<>();
-            for (int j = 0; j < 4; j++) {
-                Random random = new Random(j);
-                floorSeats.add(j, new PinStruct(i, new PointF(random.nextInt(10) * 200, random.nextInt(10) * 200)));
-            }
-            numbersOfSeats.add(i, floorSeats);
+            numbersOfSeats.add(i, new ArrayList<>());
         }
+        numbersOfSeats.set(3, floorSeats);
+    }
+
+    public void updateFromServer() {
+
     }
 
     public List<PinStruct> getNumbersOfSeats(int i) {

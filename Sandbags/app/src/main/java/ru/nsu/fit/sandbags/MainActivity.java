@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import ru.nsu.fit.sandbags.fragments.FloorFragment;
 
@@ -18,6 +19,15 @@ public class MainActivity extends AppCompatActivity {
     private final List<Button> floors = new ArrayList<>(5);
     private FloorFragment floorFragment;
     private static final UpdateManager updateManager = new UpdateManager();
+    private final Thread updaterThread = new Thread(()->{
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
+                TimeUnit.MINUTES.sleep(5);
+            } catch (InterruptedException e) {
+                break;
+            }
+        }
+    });
 
     public static UpdateManager getUpdateManager() {
         return updateManager;

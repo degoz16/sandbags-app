@@ -15,12 +15,14 @@ import java.util.concurrent.TimeUnit;
 import ru.nsu.fit.sandbags.fragments.FloorFragment;
 
 public class MainActivity extends AppCompatActivity {
-
+    private int currentFloor = 0;
     private final List<Button> floors = new ArrayList<>(5);
     private FloorFragment floorFragment;
     private static final UpdateManager updateManager = new UpdateManager();
     private final Thread updaterThread = new Thread(()->{
         while (!Thread.currentThread().isInterrupted()) {
+            updateManager.updateFromServer();
+            floorFragment.updatePinsOnMap(updateManager.getNumbersOfSeats(currentFloor));
             try {
                 TimeUnit.MINUTES.sleep(5);
             } catch (InterruptedException e) {
@@ -51,7 +53,9 @@ public class MainActivity extends AppCompatActivity {
             final int finalI = i;
             floors.get(i).setOnClickListener(view -> {
                 floorFragment.updatePinsOnMap(updateManager.getNumbersOfSeats(finalI));
+                currentFloor = finalI;
             });
         }
+        updaterThread.start();
     }
 }

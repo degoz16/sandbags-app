@@ -1,5 +1,6 @@
 package ru.nsu.fit.sandbags;
 
+import android.content.ClipData;
 import android.content.Context;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -23,4 +24,5 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertEquals("ru.nsu.fit.sandbags", appContext.getPackageName());
     }
+
 }

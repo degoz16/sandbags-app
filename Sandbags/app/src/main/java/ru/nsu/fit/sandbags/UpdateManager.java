@@ -8,14 +8,20 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 import ru.nsu.fit.sandbags.api.ServerAPI;
+import ru.nsu.fit.sandbags.fragments.FloorFragment;
 import ru.nsu.fit.sandbags.map.PinStruct;
 
 public class UpdateManager {
     private final ServerAPI serverAPI = new ServerAPI();
-    private final List<List<PinStruct>> numbersOfSeats = new ArrayList<>();
+    private List<List<PinStruct>> numbersOfSeats = new ArrayList<>();
     private final Object monitor = new Object();
+    private int floor = 0;
 
-    public UpdateManager() {
+    public void setFloor(int floor) {
+        this.floor = floor;
+    }
+
+    public UpdateManager(FloorFragment floorFragment) {
         List<PinStruct> floorSeats = new ArrayList<>();
         floorSeats.add(0, new PinStruct(10, new PointF(320f, 1800f)));
         for (int i = 0; i < 5; i++) {
@@ -24,29 +30,28 @@ public class UpdateManager {
         numbersOfSeats.set(3, floorSeats);
 
         Thread updaterThread = new Thread(() -> {
-            List<List<Integer>> list = null;
+            List<List<PinStruct>> list = null;
             while (!Thread.currentThread().isInterrupted()) {
                 synchronized (monitor) {
                     try {
                         monitor.wait();
-                        FutureTask<List<List<Integer>>> futureTask = serverAPI.getCurrentSandbagsState();
-                        list = futureTask.get();
                     } catch (InterruptedException e) {
                         break;
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
                     }
+                }
+                FutureTask<List<List<PinStruct>>> futureTask = serverAPI.getCurrentSandbagsState();
+                try {
+                    list = futureTask.get();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    break;
                 }
                 //System.out.println(list.size());
                 if (list != null) {
-                    for (int i = 0; i < numbersOfSeats.size(); i++) {
-                        System.out.println(list.get(i).size());
-                        System.out.println(numbersOfSeats.get(i).size());
-                        for (int j = 0; j < numbersOfSeats.get(i).size(); j++) {
-                            numbersOfSeats.get(i).get(j).setNum(list.get(i).get(j));
-                        }
-                    }
+                    numbersOfSeats = list;
                 }
+                floorFragment.updatePinsOnMap(numbersOfSeats.get(floor));
             }
         });
         updaterThread.start();

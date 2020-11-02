@@ -2,13 +2,7 @@
     <string name="app_name">sandbags</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_floor_label">First floor fragment</string>
-    <string name="second_floor_label">Second floor fragment</string>
-    <string name="third_floor_label">Third floor fragment</string>
-    <string name="fourth_floor_label">Fourth floor fragment</string>
-    <string name="fifth_floor_label">Fifth floor fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="refresh">Refresh</string>
 
     <string name="first_floor">first_floor</string>
     <string name="second_floor">second_floor</string>
@@ -21,4 +15,5 @@
     <string name="button_floor_3">3</string>
     <string name="button_floor_4">4</string>
     <string name="button_floor_5">5</string>
+
 </resources>

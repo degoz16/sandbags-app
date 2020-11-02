@@ -21,11 +21,9 @@ import ru.nsu.fit.sandbags.UpdateManager;
 
 public class FloorFragment extends Fragment {
 
-    private Button test;
+
     private static PinView map;
-    private UpdateManager updateManager;
-    //private PointF center;
-    //private float scale;
+
 
     public void updatePinsOnMap(List<PinStruct> pinStructList){
         if (map != null) {
@@ -46,9 +44,5 @@ public class FloorFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         map = view.findViewById(R.id.mapView);
         map.setImage(ImageSource.asset("map.png"));
-        if (updateManager == null) {
-            updateManager = MainActivity.getUpdateManager();
-        }
-        updatePinsOnMap(updateManager.getNumbersOfSeats(0));
     }
 }

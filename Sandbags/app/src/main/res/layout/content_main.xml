@@ -13,13 +13,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
         <fragment
             android:id="@+id/floorFragment"
             android:name="ru.nsu.fit.sandbags.fragments.FloorFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
     </FrameLayout>
 
     <LinearLayout
@@ -61,5 +62,14 @@
             android:text="@string/button_floor_1" />
 
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/refresh"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:contentDescription="@string/refresh"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_baseline_refresh_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

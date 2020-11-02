@@ -1,6 +1,8 @@
 package ru.nsu.fit.sandbags.api;
 
+import android.graphics.PointF;
 import android.util.JsonReader;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -8,7 +10,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,10 +17,12 @@ import java.util.concurrent.FutureTask;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import ru.nsu.fit.sandbags.map.PinStruct;
+
 public class ServerAPI {
-    public FutureTask<List<List<Integer>>> getCurrentSandbagsState() {
-        Callable<List<List<Integer>>> task = () -> {
-            List<List<Integer>> currentState = new ArrayList<>();
+    public FutureTask<List<List<PinStruct>>> getCurrentSandbagsState() {
+        Callable<List<List<PinStruct>>> task = () -> {
+            List<List<PinStruct>> currentState = new ArrayList<>();
             try {
                 URL serverEndpoint = new URL("https://sandbags-project.herokuapp.com/api/v1/state/");
                 HttpsURLConnection myConnection =
@@ -33,15 +36,11 @@ public class ServerAPI {
                     while (jsonReader.hasNext()) {
                         jsonReader.beginObject(); // floor
                         String key = jsonReader.nextName();
-                        System.out.println(key);
-                        if (key.equals("number")) { //floor number
-                            jsonReader.skipValue();
-                            key = jsonReader.nextName();
-                            if (key.equals("places")) {
-                                jsonReader.beginArray(); //places
-                                currentState.add(parsePlaces(jsonReader));
-                                jsonReader.endArray();
-                            }
+                        if (key.equals("places")) {
+                            jsonReader.beginArray(); //places
+                            currentState.add(parsePlaces(jsonReader));
+                            System.out.println(currentState.size());
+                            jsonReader.endArray();
                         }
                         jsonReader.endObject();
                     }
@@ -57,28 +56,41 @@ public class ServerAPI {
             return currentState;
         };
 
-        FutureTask<List<List<Integer>>> future = new FutureTask<>(task);
+        FutureTask<List<List<PinStruct>>> future = new FutureTask<>(task);
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(future);
         return future;
     }
 
-    private List<Integer> parsePlaces(JsonReader jsonReader) {
-        List<Integer> floor = new ArrayList<>();
+    private List<PinStruct> parsePlaces(JsonReader jsonReader) {
+        List<PinStruct> floor = new ArrayList<>();
         try {
             while (jsonReader.hasNext()) {
                 jsonReader.beginObject();
+
+                float xCoord = -1;
+                float yCoord = -1;
+                int empty = -1;
+
                 String key = jsonReader.nextName();
-                if (key.equals("placeNumber")) {
-                    jsonReader.skipValue();
-                    key = jsonReader.nextName();
-                    if (key.equals("sandbags")) {
-                        floor.add(jsonReader.nextInt());
-                    }
+                if (key.equals("x_coord")) {
+                    xCoord = jsonReader.nextInt();
                 }
+                key = jsonReader.nextName();
+                if (key.equals("y_coord")) {
+                    yCoord = jsonReader.nextInt();
+                }
+                key = jsonReader.nextName();
+                if (key.equals("sandbags")) {
+                    empty = jsonReader.nextInt();
+                }
+                PinStruct struct = new PinStruct(empty, new PointF(xCoord, yCoord));
+                floor.add(struct);
                 jsonReader.endObject();
+
             }
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return floor;
     }

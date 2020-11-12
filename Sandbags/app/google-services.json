@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "454872156489",
+    "firebase_url": "https://sanbags-app.firebaseio.com",
+    "project_id": "sanbags-app",
+    "storage_bucket": "sanbags-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454872156489:android:0d973e3c11d69f03ffb298",
+        "android_client_info": {
+          "package_name": "ru.nsu.fit.sandbags"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "454872156489-eqpn83feomdhj1q5d5mvdj300foupjtg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhL8-jog3zebTl9-YxKLC9kh4UTy04o8Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "454872156489-eqpn83feomdhj1q5d5mvdj300foupjtg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

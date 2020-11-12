@@ -39,7 +39,7 @@ public class ServerAPI {
                         if (key.equals("places")) {
                             jsonReader.beginArray(); //places
                             currentState.add(parsePlaces(jsonReader));
-                            System.out.println(currentState.size());
+                            //System.out.println(currentState.size());
                             jsonReader.endArray();
                         }
                         jsonReader.endObject();

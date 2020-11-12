@@ -32,6 +32,7 @@ public class UpdateManager {
         Thread updaterThread = new Thread(() -> {
             List<List<PinStruct>> list = null;
             while (!Thread.currentThread().isInterrupted()) {
+                System.out.println("TEST UPDATE LOOP");
                 synchronized (monitor) {
                     try {
                         monitor.wait();
@@ -47,7 +48,6 @@ public class UpdateManager {
                 } catch (InterruptedException e) {
                     break;
                 }
-                //System.out.println(list.size());
                 if (list != null) {
                     numbersOfSeats = list;
                 }

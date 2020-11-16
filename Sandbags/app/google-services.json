@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "454872156489-q3pq3g6qufc4fhr85d8894ffr4f0psd2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.nsu.fit.sandbags",
+            "certificate_hash": "b51a5c89076c7bfd8d5bf275aad63c02ff51dc98"
+          }
+        },
+        {
           "client_id": "454872156489-eqpn83feomdhj1q5d5mvdj300foupjtg.apps.googleusercontent.com",
           "client_type": 3
         }

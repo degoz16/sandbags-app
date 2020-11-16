@@ -19,16 +19,27 @@ public class PinView extends SubsamplingScaleImageView {
 
     private final static Integer[] pins_res = {
             R.drawable.pin_0,
+            R.drawable.pin_0f,
             R.drawable.pin_1,
+            R.drawable.pin_1f,
             R.drawable.pin_2,
+            R.drawable.pin_2f,
             R.drawable.pin_3,
+            R.drawable.pin_3f,
             R.drawable.pin_4,
+            R.drawable.pin_4f,
             R.drawable.pin_5,
+            R.drawable.pin_5f,
             R.drawable.pin_6,
+            R.drawable.pin_6f,
             R.drawable.pin_7,
+            R.drawable.pin_7f,
             R.drawable.pin_8,
+            R.drawable.pin_8f,
             R.drawable.pin_9,
-            R.drawable.pin_10
+            R.drawable.pin_9f,
+            R.drawable.pin_10,
+            R.drawable.pin_10f
     };
 
     private final Paint paint = new Paint();
@@ -45,8 +56,13 @@ public class PinView extends SubsamplingScaleImageView {
         initialise();
     }
 
-    public void setPin(List<PinStruct> sPins) {
+    public void setPins(List<PinStruct> sPins) {
         this.sPins = sPins;
+        initialise();
+        invalidate();
+    }
+
+    public void refreshPins() {
         initialise();
         invalidate();
     }
@@ -55,11 +71,19 @@ public class PinView extends SubsamplingScaleImageView {
         float density = getResources().getDisplayMetrics().densityDpi;
         for (int i = 0; i < sPins.size(); i++) {
             Bitmap pin;
-            pin = BitmapFactory.decodeResource(this.getResources(), pins_res[sPins.get(i).getNum()]);
+            pin = BitmapFactory.decodeResource(
+                    this.getResources(),
+                    pins_res[sPins.get(i).getNum() * 2 + (sPins.get(i).isFollow() ? 1 : 0)]);
             float w = (density / 420f) * pin.getWidth();
             float h = (density / 420f) * pin.getHeight();
             pins.add(i, Bitmap.createScaledBitmap(pin, (int) w, (int) h, true));
         }
+    }
+
+    @Override
+    public boolean performClick() {
+        super.performClick();
+        return true;
     }
 
     @Override
@@ -75,7 +99,7 @@ public class PinView extends SubsamplingScaleImageView {
             for (int i = 0; i < sPins.size(); i++) {
                 if (pins.get(i) != null) {
                     sourceToViewCoord(sPins.get(i).getPoint(), vPin);
-                    float vX = vPin.x - (pins.get(i).getWidth() / 2);
+                    float vX = vPin.x - (float) (pins.get(i).getWidth() / 2);
                     float vY = vPin.y - pins.get(i).getHeight();
                     canvas.drawBitmap(pins.get(i), vX, vY, paint);
                 }

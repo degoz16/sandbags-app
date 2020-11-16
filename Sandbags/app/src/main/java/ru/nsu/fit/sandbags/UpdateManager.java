@@ -16,12 +16,19 @@ public class UpdateManager {
     private List<List<PinStruct>> numbersOfSeats = new ArrayList<>();
     private final Object monitor = new Object();
     private int floor = 0;
+    private MainActivity mainActivity;
 
     public void setFloor(int floor) {
         this.floor = floor;
     }
 
-    public UpdateManager(FloorFragment floorFragment) {
+    public int getFloor() {
+        return floor;
+    }
+
+    public UpdateManager(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+
         List<PinStruct> floorSeats = new ArrayList<>();
         floorSeats.add(0, new PinStruct(10, new PointF(320f, 1800f)));
         for (int i = 0; i < 5; i++) {
@@ -32,7 +39,6 @@ public class UpdateManager {
         Thread updaterThread = new Thread(() -> {
             List<List<PinStruct>> list = null;
             while (!Thread.currentThread().isInterrupted()) {
-                System.out.println("TEST UPDATE LOOP");
                 synchronized (monitor) {
                     try {
                         monitor.wait();
@@ -51,7 +57,7 @@ public class UpdateManager {
                 if (list != null) {
                     numbersOfSeats = list;
                 }
-                floorFragment.updatePinsOnMap(numbersOfSeats.get(floor));
+                mainActivity.updatePinsOnMap(numbersOfSeats.get(floor));
             }
         });
         updaterThread.start();
@@ -63,7 +69,14 @@ public class UpdateManager {
         }
     }
 
+    public void updatePinsOnMap() {
+        mainActivity.updatePinsOnMap(numbersOfSeats.get(floor));
+    }
+
     public List<PinStruct> getNumbersOfSeats(int i) {
         return numbersOfSeats.get(i);
+    }
+    public int getFloorCnt() {
+        return numbersOfSeats.size();
     }
 }

@@ -15,5 +15,6 @@
     <string name="button_floor_3">3</string>
     <string name="button_floor_4">4</string>
     <string name="button_floor_5">5</string>
+    <string name="msg_token_fmt">Token %s</string>
 
 </resources>

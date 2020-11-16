@@ -5,6 +5,15 @@ import android.graphics.PointF;
 public class PinStruct {
     private int num;
     private final PointF point;
+    private boolean follow = false;
+
+    public boolean isFollow() {
+        return follow;
+    }
+
+    public void setFollow(boolean follow) {
+        this.follow = follow;
+    }
 
     public PinStruct(int num, PointF point) {
         this.num = num > 0 ? num % 11 : 0;

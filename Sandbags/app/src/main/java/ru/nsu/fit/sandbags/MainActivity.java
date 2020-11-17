@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        refresh.setOnClickListener(view -> updateManager.updateFromServer());
+        //refresh.setOnClickListener(view -> updateManager.updateFromServer());
         updatePinsOnMap(updateManager.getNumbersOfSeats(0));
         //updaterThread.start();
 
@@ -200,15 +200,17 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         map.refreshPins();
+
         boolean defaultTopic = sharedPreferences.getBoolean("defaultTopic", false);
         if (!defaultTopic) {
+            System.out.println("default topic");
             fm.subscribeToTopic("default").addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
 
                 }
             });
-            editor.putBoolean("defaultTopic", false);
+            editor.putBoolean("defaultTopic", true);
             editor.apply();
         }
     }

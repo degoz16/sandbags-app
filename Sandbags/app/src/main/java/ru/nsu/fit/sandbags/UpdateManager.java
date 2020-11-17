@@ -34,7 +34,7 @@ public class UpdateManager {
         for (int i = 0; i < 5; i++) {
             numbersOfSeats.add(i, new ArrayList<>());
         }
-        numbersOfSeats.set(3, floorSeats);
+        numbersOfSeats.add(3, floorSeats);
 
         Thread updaterThread = new Thread(() -> {
             List<List<PinStruct>> list = null;
@@ -60,7 +60,7 @@ public class UpdateManager {
                 mainActivity.updatePinsOnMap(numbersOfSeats.get(floor));
             }
         });
-        updaterThread.start();
+        //updaterThread.start();
     }
 
     public void updateFromServer() {

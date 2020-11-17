@@ -10,6 +10,8 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import ru.nsu.fit.sandbags.MainActivity;
+import ru.nsu.fit.sandbags.UpdateManager;
+import ru.nsu.fit.sandbags.map.PinView;
 
 public class FirebaseManager extends FirebaseMessagingService {
 
@@ -30,13 +32,14 @@ public class FirebaseManager extends FirebaseMessagingService {
             int floor = Integer.parseInt(remoteMessage.getData().get("floor"));
             int point = Integer.parseInt(remoteMessage.getData().get("place"));
             int num = Integer.parseInt(remoteMessage.getData().get("num"));
-            MainActivity.getMainActivityWeakReference()
-                    .get()
-                    .getUpdateManager()
-                    .getNumbersOfSeats(floor)
-                    .get(point)
-                    .setNum(num);
-            
+            MainActivity mainActivity = MainActivity.getMainActivityWeakReference().get();
+            PinView map = mainActivity.getMap();
+            mainActivity
+                .getUpdateManager()
+                .getNumbersOfSeats(floor)
+                .get(point)
+                .setNum(num);
+            map.refreshPins();
         }
         System.out.println("Message received");
         System.out.println(remoteMessage.getData());

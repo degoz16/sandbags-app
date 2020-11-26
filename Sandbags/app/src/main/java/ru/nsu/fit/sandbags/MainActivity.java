@@ -26,6 +26,7 @@ import java.lang.ref.WeakReference;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import ru.nsu.fit.sandbags.firebase.FirebaseManager;
@@ -66,9 +67,9 @@ public class MainActivity extends AppCompatActivity {
         return map;
     }
 
-    public void updatePinsOnMap(List<PinStruct> pinStructList){
+    public void updatePinsOnMap(Map<String, PinStruct> pinStructList) {
         if (map != null) {
-            map.setPins(pinStructList);
+            map.setPins(new ArrayList<>(pinStructList.values()));
         }
     }
 
@@ -112,27 +113,26 @@ public class MainActivity extends AppCompatActivity {
                 if (map.isReady()) {
                     float radius = 100 / map.getScale();
                     PointF point = map.viewToSourceCoord(e.getX(), e.getY());
-                    List<PinStruct> pinsList = updateManager.getNumbersOfSeats(updateManager.getFloor());
+                    List<PinStruct> pinsList = new ArrayList<>(updateManager.getNumbersOfSeats(updateManager.getFloor()).values());
                     PinStruct pinStruct = pinsList.get(0);
-                    float dist = (float)Math.sqrt(
+                    assert point != null;
+                    float dist = (float) Math.sqrt(
                             Math.pow(pinStruct.getPoint().x - point.x, 2) +
-                            Math.pow(pinStruct.getPoint().y - 128 - point.y, 2)
+                                    Math.pow(pinStruct.getPoint().y - 128 - point.y, 2)
                     );
-                    int id = 0;
                     for (int i = 0; i < pinsList.size(); i++) {
-                        float dist1 = (float)Math.sqrt(
+                        float dist1 = (float) Math.sqrt(
                                 Math.pow(pinsList.get(i).getPoint().x - point.x, 2) +
-                                Math.pow(pinsList.get(i).getPoint().y - 128 - point.y, 2)
+                                        Math.pow(pinsList.get(i).getPoint().y - 128 - point.y, 2)
                         );
                         if (dist1 < dist) {
                             dist = dist1;
-                            id = i;
                             pinStruct = pinsList.get(i);
                         }
                     }
                     if (dist < radius) {
                         pinStruct.setFollow(!pinStruct.isFollow());
-                        String topic = "place_" + updateManager.getFloor() + "_" + id;
+                        String topic = "place_" + updateManager.getFloor() + "_" + Math.round(pinStruct.getPoint().x) + "_" + Math.round(pinStruct.getPoint().y);
                         System.out.println(topic);
                         editor.putBoolean(topic, pinStruct.isFollow());
                         editor.apply();
@@ -143,8 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 }
                             });
-                        }
-                        else {
+                        } else {
                             fm.unsubscribeFromTopic(topic).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -193,10 +192,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         for (int i = 0; i < updateManager.getFloorCnt(); i++) {
-            for (int j = 0; j < updateManager.getNumbersOfSeats(i).size(); j++) {
-                boolean followed = sharedPreferences.getBoolean("place_" + i + "_" + j, false);
+            for (PinStruct pinStruct : updateManager.getNumbersOfSeats(i).values()) {
+                boolean followed = sharedPreferences.getBoolean(
+                        "place_" + i + "_" + Math.round(pinStruct.getPoint().x) + "_" + Math.round(pinStruct.getPoint().y),
+                        false);
                 System.out.println(followed);
-                updateManager.getNumbersOfSeats(i).get(j).setFollow(followed);
+                pinStruct.setFollow(followed);
             }
         }
         map.refreshPins();

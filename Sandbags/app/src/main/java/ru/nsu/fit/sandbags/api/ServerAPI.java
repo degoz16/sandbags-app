@@ -84,7 +84,7 @@ public class ServerAPI {
                 if (key.equals("sandbags")) {
                     empty = jsonReader.nextInt();
                 }
-                PinStruct struct = new PinStruct(empty, new PointF(xCoord, yCoord));
+                PinStruct struct = new PinStruct(empty, new PointF(xCoord, yCoord), false);
                 floor.add(struct);
                 jsonReader.endObject();
 

@@ -31,7 +31,7 @@ public class UpdateManager {
     public UpdateManager(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         Map<String, PinStruct> floorSeats = new TreeMap<>();
-        floorSeats.put("320_1800", new PinStruct(10, new PointF(320f, 1800f)));
+        floorSeats.put("320_1800", new PinStruct(10, new PointF(320f, 1800f), true));
         for (int i = 0; i < 5; i++) {
             numbersOfSeats.add(i, new TreeMap<>());
         }

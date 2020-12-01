@@ -137,18 +137,12 @@ public class MainActivity extends AppCompatActivity {
                         editor.putBoolean(topic, pinStruct.isFollow());
                         editor.apply();
                         if (pinStruct.isFollow()) {
-                            fm.subscribeToTopic(topic).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
+                            fm.subscribeToTopic(topic).addOnCompleteListener(task -> {
 
-                                }
                             });
                         } else {
-                            fm.unsubscribeFromTopic(topic).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
+                            fm.unsubscribeFromTopic(topic).addOnCompleteListener(task -> {
 
-                                }
                             });
                         }
                         map.refreshPins();
@@ -171,23 +165,20 @@ public class MainActivity extends AppCompatActivity {
         //updaterThread.start();
 
         fm.getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            return;
-                        }
-
-                        String token = task.getResult();
-                        System.out.println(token);
-                        fm.send(new RemoteMessage.Builder(SENDER_ID + "@gcm.googleapis.com").
-                                setMessageId(Hashing
-                                        .sha256()
-                                        .hashString(token + System.currentTimeMillis(), Charsets.UTF_8)
-                                        .toString())
-                                .addData("token", token)
-                                .build());
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        return;
                     }
+
+                    String token = task.getResult();
+                    System.out.println(token);
+                    fm.send(new RemoteMessage.Builder(SENDER_ID + "@gcm.googleapis.com").
+                            setMessageId(Hashing
+                                    .sha256()
+                                    .hashString(token + System.currentTimeMillis(), Charsets.UTF_8)
+                                    .toString())
+                            .addData("token", token)
+                            .build());
                 });
 
 
@@ -205,11 +196,8 @@ public class MainActivity extends AppCompatActivity {
         boolean defaultTopic = sharedPreferences.getBoolean("defaultTopic", false);
         if (!defaultTopic) {
             System.out.println("default topic");
-            fm.subscribeToTopic("default").addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
+            fm.subscribeToTopic("default").addOnCompleteListener(task -> {
 
-                }
             });
             editor.putBoolean("defaultTopic", true);
             editor.apply();

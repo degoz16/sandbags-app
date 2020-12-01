@@ -17,30 +17,21 @@ import ru.nsu.fit.sandbags.R;
 
 public class PinView extends SubsamplingScaleImageView {
 
-    private final static Integer[] pins_res = {
+    private final static int[] pins_res = {
             R.drawable.pin_0,
-            R.drawable.pin_0f,
             R.drawable.pin_1,
-            R.drawable.pin_1f,
             R.drawable.pin_2,
-            R.drawable.pin_2f,
             R.drawable.pin_3,
-            R.drawable.pin_3f,
             R.drawable.pin_4,
-            R.drawable.pin_4f,
             R.drawable.pin_5,
-            R.drawable.pin_5f,
             R.drawable.pin_6,
-            R.drawable.pin_6f,
             R.drawable.pin_7,
-            R.drawable.pin_7f,
             R.drawable.pin_8,
-            R.drawable.pin_8f,
             R.drawable.pin_9,
-            R.drawable.pin_9f,
-            R.drawable.pin_10,
-            R.drawable.pin_10f
+            R.drawable.pin_10
     };
+    private final static int star_res = R.drawable.star;
+    private final static int warning_res = R.drawable.warning;
 
     private final Paint paint = new Paint();
     private final PointF vPin = new PointF();
@@ -54,6 +45,17 @@ public class PinView extends SubsamplingScaleImageView {
     public PinView(Context context, AttributeSet attr) {
         super(context, attr);
         initialise();
+    }
+
+    private static Bitmap mergeToPin(Bitmap back, Bitmap front) {
+        Bitmap result = Bitmap.createBitmap(back.getWidth(), back.getHeight(), back.getConfig());
+        Canvas canvas = new Canvas(result);
+        int widthBack = back.getWidth();
+        int widthFront = front.getWidth();
+        float move = (float)(widthBack - widthFront) / 2;
+        canvas.drawBitmap(back, 0f, 0f, null);
+        canvas.drawBitmap(front, move, move, null);
+        return result;
     }
 
     public void setPins(List<PinStruct> sPins) {
@@ -73,7 +75,13 @@ public class PinView extends SubsamplingScaleImageView {
             Bitmap pin;
             pin = BitmapFactory.decodeResource(
                     this.getResources(),
-                    pins_res[sPins.get(i).getNum() * 2 + (sPins.get(i).isFollow() ? 1 : 0)]);
+                    pins_res[sPins.get(i).getNum()]);
+            if (sPins.get(i).isFollow()) {
+                pin = mergeToPin(pin, BitmapFactory.decodeResource(this.getResources(), star_res));
+            }
+            if (sPins.get(i).isPrediction()) {
+                pin = mergeToPin(pin, BitmapFactory.decodeResource(this.getResources(), warning_res));
+            }
             float w = (density / 420f) * pin.getWidth();
             float h = (density / 420f) * pin.getHeight();
             pins.add(i, Bitmap.createScaledBitmap(pin, (int) w, (int) h, true));

@@ -43,16 +43,9 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
     private static WeakReference<MainActivity> mainActivityWeakReference;
 
-    private final Thread updaterThread = new Thread(() -> {
-        while (!Thread.currentThread().isInterrupted()) {
-            try {
-                TimeUnit.MINUTES.sleep(5);
-            } catch (InterruptedException e) {
-                break;
-            }
-            updateManager.updateFromServer();
-        }
-    });
+    public SharedPreferences getSharedPreferences() {
+        return sharedPreferences;
+    }
 
     public UpdateManager getUpdateManager() {
         return updateManager;
@@ -202,5 +195,6 @@ public class MainActivity extends AppCompatActivity {
             editor.putBoolean("defaultTopic", true);
             editor.apply();
         }
+        updateManager.updateFromServer();
     }
 }

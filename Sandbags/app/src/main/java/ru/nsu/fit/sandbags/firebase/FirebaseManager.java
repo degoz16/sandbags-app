@@ -32,7 +32,7 @@ public class FirebaseManager extends FirebaseMessagingService {
                 int x = Integer.parseInt(remoteMessage.getData().get("x"));
                 int y = Integer.parseInt(remoteMessage.getData().get("y"));
                 int num = Integer.parseInt(remoteMessage.getData().get("num"));
-                boolean predict = Boolean.parseBoolean(remoteMessage.getData().get("predict"));
+                int predict = Integer.parseInt(remoteMessage.getData().get("predict"));
                 MainActivity mainActivity = MainActivity.getMainActivityWeakReference().get();
                 UpdateManager updateManager = mainActivity.getUpdateManager();
                 PinStruct newPinStruct = new PinStruct(num, new PointF(x, y), predict);

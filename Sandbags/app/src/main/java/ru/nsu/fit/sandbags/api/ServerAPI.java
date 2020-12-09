@@ -1,5 +1,6 @@
 package ru.nsu.fit.sandbags.api;
 
+import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.util.JsonReader;
 
@@ -10,6 +11,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,9 +23,15 @@ import javax.net.ssl.HttpsURLConnection;
 import ru.nsu.fit.sandbags.map.PinStruct;
 
 public class ServerAPI {
-    public FutureTask<List<List<PinStruct>>> getCurrentSandbagsState() {
-        Callable<List<List<PinStruct>>> task = () -> {
-            List<List<PinStruct>> currentState = new ArrayList<>();
+    private final SharedPreferences sharedPreferences;
+
+    public ServerAPI(SharedPreferences sharedPreferences) {
+        this.sharedPreferences = sharedPreferences;
+    }
+
+    public FutureTask<List<Map<String, PinStruct>>> getCurrentSandbagsState() {
+        Callable<List<Map<String, PinStruct>>> task = () -> {
+            List<Map<String, PinStruct>> currentState = new ArrayList<>();
             try {
                 URL serverEndpoint = new URL("https://sandbags-project.herokuapp.com/api/v1/state/");
                 HttpsURLConnection myConnection =
@@ -32,15 +41,17 @@ public class ServerAPI {
                     Reader responseBodyReader =
                             new InputStreamReader(myConnection.getInputStream(), "UTF-8");
                     JsonReader jsonReader = new JsonReader(responseBodyReader);
-                    jsonReader.beginArray(); //floors
+                    jsonReader.beginArray(); //
+                    int i = 0;
                     while (jsonReader.hasNext()) {
                         jsonReader.beginObject(); // floor
                         String key = jsonReader.nextName();
                         if (key.equals("places")) {
                             jsonReader.beginArray(); //places
-                            currentState.add(parsePlaces(jsonReader));
+                            currentState.add(parsePlaces(jsonReader, i));
                             //System.out.println(currentState.size());
                             jsonReader.endArray();
+                            i++;
                         }
                         jsonReader.endObject();
                     }
@@ -53,17 +64,18 @@ public class ServerAPI {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             return currentState;
         };
 
-        FutureTask<List<List<PinStruct>>> future = new FutureTask<>(task);
+        FutureTask<List<Map<String, PinStruct>>> future = new FutureTask<>(task);
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(future);
         return future;
     }
 
-    private List<PinStruct> parsePlaces(JsonReader jsonReader) {
-        List<PinStruct> floor = new ArrayList<>();
+    private Map<String, PinStruct> parsePlaces(JsonReader jsonReader, int i) {
+        Map<String, PinStruct> floor = new TreeMap<>();
         try {
             while (jsonReader.hasNext()) {
                 jsonReader.beginObject();
@@ -71,7 +83,7 @@ public class ServerAPI {
                 float xCoord = -1;
                 float yCoord = -1;
                 int empty = -1;
-
+                int predict = -1;
                 String key = jsonReader.nextName();
                 if (key.equals("x_coord")) {
                     xCoord = jsonReader.nextInt();
@@ -84,8 +96,17 @@ public class ServerAPI {
                 if (key.equals("sandbags")) {
                     empty = jsonReader.nextInt();
                 }
-                PinStruct struct = new PinStruct(empty, new PointF(xCoord, yCoord), false);
-                floor.add(struct);
+                key = jsonReader.nextName();
+                if (key.equals("predict")) {
+                    predict = jsonReader.nextInt();
+                }
+                PinStruct struct = new PinStruct(empty, new PointF(xCoord, yCoord), predict);
+                boolean followed = sharedPreferences.getBoolean(
+                        "place_" + i + "_" + Math.round(struct.getPoint().x) + "_" + Math.round(struct.getPoint().y),
+                        false);
+                System.out.println(followed);
+                struct.setFollow(followed);
+                floor.put(xCoord + "_" + yCoord, struct);
                 jsonReader.endObject();
 
             }

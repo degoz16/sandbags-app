@@ -31,7 +31,19 @@ public class PinView extends SubsamplingScaleImageView {
             R.drawable.pin_10
     };
     private final static int star_res = R.drawable.star;
-    private final static int warning_res = R.drawable.warning;
+    private final static int[] predict_res = {
+            R.drawable.pin_0s,
+            R.drawable.pin_1s,
+            R.drawable.pin_2s,
+            R.drawable.pin_3s,
+            R.drawable.pin_4s,
+            R.drawable.pin_5s,
+            R.drawable.pin_6s,
+            R.drawable.pin_7s,
+            R.drawable.pin_8s,
+            R.drawable.pin_9s,
+            R.drawable.pin_10s,
+    };
 
     private final Paint paint = new Paint();
     private final PointF vPin = new PointF();
@@ -52,7 +64,7 @@ public class PinView extends SubsamplingScaleImageView {
         Canvas canvas = new Canvas(result);
         int widthBack = back.getWidth();
         int widthFront = front.getWidth();
-        float move = (float)(widthBack - widthFront) / 2;
+        float move = (float) (widthBack - widthFront) / 2;
         canvas.drawBitmap(back, 0f, 0f, null);
         canvas.drawBitmap(front, move, move, null);
         return result;
@@ -79,8 +91,8 @@ public class PinView extends SubsamplingScaleImageView {
             if (sPins.get(i).isFollow()) {
                 pin = mergeToPin(pin, BitmapFactory.decodeResource(this.getResources(), star_res));
             }
-            if (sPins.get(i).isPrediction()) {
-                pin = mergeToPin(pin, BitmapFactory.decodeResource(this.getResources(), warning_res));
+            if (sPins.get(i).getPrediction() != -1) {
+                pin = mergeToPin(pin, BitmapFactory.decodeResource(this.getResources(), predict_res[sPins.get(i).getPrediction()]));
             }
             float w = (density / 420f) * pin.getWidth();
             float h = (density / 420f) * pin.getHeight();

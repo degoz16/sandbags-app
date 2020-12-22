@@ -102,11 +102,11 @@ public class ServerAPI {
                 }
                 PinStruct struct = new PinStruct(empty, new PointF(xCoord, yCoord), predict);
                 boolean followed = sharedPreferences.getBoolean(
-                        "place_" + i + "_" + Math.round(struct.getPoint().x) + "_" + Math.round(struct.getPoint().y),
+                        "place_" + i + "_" + (int)struct.getPoint().x + "_" + (int)struct.getPoint().y,
                         false);
                 System.out.println(followed);
                 struct.setFollow(followed);
-                floor.put(xCoord + "_" + yCoord, struct);
+                floor.put((int)xCoord + "_" + (int)yCoord, struct);
                 jsonReader.endObject();
 
             }

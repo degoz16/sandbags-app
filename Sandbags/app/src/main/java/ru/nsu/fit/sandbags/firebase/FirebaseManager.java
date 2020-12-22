@@ -1,11 +1,6 @@
 package ru.nsu.fit.sandbags.firebase;
 
-
-import android.content.Context;
 import android.graphics.PointF;
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -13,7 +8,6 @@ import com.google.firebase.messaging.RemoteMessage;
 import ru.nsu.fit.sandbags.MainActivity;
 import ru.nsu.fit.sandbags.UpdateManager;
 import ru.nsu.fit.sandbags.map.PinStruct;
-import ru.nsu.fit.sandbags.map.PinView;
 
 public class FirebaseManager extends FirebaseMessagingService {
 
@@ -35,17 +29,17 @@ public class FirebaseManager extends FirebaseMessagingService {
                 int predict = Integer.parseInt(remoteMessage.getData().get("predict"));
                 MainActivity mainActivity = MainActivity.getMainActivityWeakReference().get();
                 UpdateManager updateManager = mainActivity.getUpdateManager();
+                System.out.println(x + "_" + y);
                 PinStruct newPinStruct = new PinStruct(num, new PointF(x, y), predict);
                 newPinStruct.setFollow(updateManager.getNumbersOfSeats(floor).get(x + "_" + y).isFollow());
                 updateManager
                         .getNumbersOfSeats(floor)
                         .put(x + "_" + y, newPinStruct);
                 updateManager.updatePinsOnMap();
-            } catch (Exception ignored) {
-
+                System.out.println("Message received");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-
-        System.out.println("Message received");
     }
 }

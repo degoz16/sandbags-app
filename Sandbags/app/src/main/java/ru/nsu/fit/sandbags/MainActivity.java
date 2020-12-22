@@ -83,8 +83,6 @@ public class MainActivity extends AppCompatActivity {
         floors.add(3, findViewById(R.id.floor_4));
         floors.add(4, findViewById(R.id.floor_5));
 
-        ImageButton refresh = findViewById(R.id.refresh);
-
         FloorFragment floorFragment = new FloorFragment();
         updateManager = new UpdateManager(this);
 
@@ -178,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < updateManager.getFloorCnt(); i++) {
             for (PinStruct pinStruct : updateManager.getNumbersOfSeats(i).values()) {
                 boolean followed = sharedPreferences.getBoolean(
-                        "place_" + i + "_" + Math.round(pinStruct.getPoint().x) + "_" + Math.round(pinStruct.getPoint().y),
+                        "place_" + i + "_" + (int)pinStruct.getPoint().x + "_" + (int)pinStruct.getPoint().y,
                         false);
                 System.out.println(followed);
                 pinStruct.setFollow(followed);
